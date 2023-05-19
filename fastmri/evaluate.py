@@ -56,6 +56,12 @@ def ssim(
 
     return ssim / gt.shape[0]
 
+def l1_error(
+        gt: np.ndarray, pred: np.ndarray
+) -> np.ndarray:
+    """Computes L1 Error """
+    return np.linalg.norm(gt - pred, ord = 1)
+
 
 METRIC_FUNCS = dict(
     MSE=mse,

@@ -15,6 +15,9 @@ import torch
 import fastmri
 from fastmri.data import CombinedSliceDataset, SliceDataset
 
+from joblib import Parallel,delayed
+from joblib.externals.loky.backend.context import get_context
+
 
 def worker_init_fn(worker_id):
     """Handle random seeding for all mask_func."""
@@ -278,6 +281,8 @@ class FastMriDataModule(pl.LightningDataModule):
             worker_init_fn=worker_init_fn,
             sampler=sampler,
             shuffle=is_train if sampler is None else False,
+            multiprocessing_context = get_context('loky'),
+            pin_memory=True
         )
 
         return dataloader
@@ -429,11 +434,11 @@ class FastMriDataModule(pl.LightningDataModule):
 
         # data loader arguments
         parser.add_argument(
-            "--batch_size", default=1, type=int, help="Data loader batch size"
+            "--batch_size", default=1, type=int, help="Data loader batch size" #1, changed by KX
         )
         parser.add_argument(
             "--num_workers",
-            default=4,
+            default=16, #4 by Kaixuan for windows
             type=int,
             help="Number of workers to use in data loader",
         )
