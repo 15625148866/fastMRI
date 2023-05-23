@@ -281,7 +281,7 @@ class FastMriDataModule(pl.LightningDataModule):
             worker_init_fn=worker_init_fn,
             sampler=sampler,
             shuffle=is_train if sampler is None else False,
-            multiprocessing_context = get_context('loky'),
+            multiprocessing_context = get_context('loky'),   #for windows multi_worker only
             pin_memory=True
         )
 
